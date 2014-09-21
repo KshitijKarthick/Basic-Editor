@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.c
  * Author: kshitijkarthick
  *
@@ -8,27 +8,22 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "conio.h"
-
-struct node
+struct node																													//Double Linked List Implementation.
 {
 	char info[11];
 	struct node *llink;
 	struct node *rlink;
 };
 typedef struct node *Node;
-
-//Root node creation
-Node root = NULL;
-
-//Filename given as cmd line arguments
-char* FILENAME;
+Node root = NULL;																										//Root node creation
+char* FILENAME;																											//Filename given as cmd line arguments
 
 /*
-	Creates a Node links it to the previous Nodes and returns the address of new node
+	Creates a Node, links it to the previous Nodes and returns the address of the new node.
 */
 Node createNode(Node parent)
 {
-	Node temp=(Node) malloc(sizeof(struct node));
+	Node temp=(Node) malloc(sizeof(struct node));											//Node Creation and joining the Node with previous nodes.
 	parent->rlink=temp;
 	temp->llink=parent;
 	return temp;
@@ -40,7 +35,7 @@ Node createNode(Node parent)
 Node deleteNode(Node current)
 {
 	Node temp=current->llink;
-	if(temp!=root)
+	if(temp!=root)																										//Delete a Node if it is not the root node.
 	{
 		free(current);
 		temp->rlink=NULL;
@@ -61,9 +56,9 @@ void save()
 {
 	FILE *fp=fopen(FILENAME,"w");
 	Node temp=root;
-	while(temp!=NULL)
+	while(temp!=NULL)																									//Node traversal from the root node to all other nodes.
 	{
-		fprintf(fp,temp->info);
+		fprintf(fp,temp->info);																					//Store data of each node in the File.
 		temp=temp->rlink;
 	}
 	fclose(fp);
@@ -79,9 +74,9 @@ void print()
 	//system("cls"); for dos operating system
 	//system("clear"); for unix operating system
 	Node temp=root;
-	while(temp!=NULL)
+	while(temp!=NULL)																									//Node traversal from the root node to all other nodes.
 	{
-		printf("%s",temp->info);
+		printf("%s",temp->info);																				//Print the data of each node to the screen.
 		temp=temp->rlink;
 	}
 }
@@ -95,23 +90,20 @@ void input()
 	int noOfChar=-1;
 	Node temp=root;
 	ch=getche();
-	//receive input and check if input is not ctrl + c and ctrl + z
+																																		//receive input and check if input is not ctrl + c and ctrl + z
 	while( ch != 3 && ch != 26 )
 	{
 		noOfChar++;
-		//check Backspace character
-		if(ch == 8)
+		if(ch == 8)																											//check Backspace character
 		{
-			// if previous node character to be deleted then delete current node and delete previous node last character
-			if(noOfChar == 0)
+			if(noOfChar == 0)																							// if previous node character to be deleted then delete current node and delete previous node last character
 			{
 				temp=deleteNode(temp);
 				noOfChar=9;
 				temp->info[noOfChar--]='\0';
 			}
 			else if( noOfChar < 10 )
-				temp->info[-- noOfChar ]='\0';
-			// if previous node traverse to previous node and delete last character
+				temp->info[-- noOfChar ]='\0';															// last node traverses to previous node and delete last character
 			print();
 		}
 		else if(noOfChar>10)
@@ -133,7 +125,7 @@ int main(int argc,char* argv[])
 	root=(Node) malloc(sizeof(struct node));
 	if(argc>1)
 	{
-		FILENAME=argv[1];
+		FILENAME=argv[1];																								//Filename stored for creating and storing data.
 		input();
 	}
 	else
