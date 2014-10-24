@@ -1,6 +1,9 @@
-#Basic Editor Functionality :
+#Basic Editor
+
+##Functionality :
   * Create Files.
   * Stores Data based on user input.
+  * Compliant with Posix Environment and Windows.
 
 ##Program Details :
   * Written in C.
@@ -11,7 +14,20 @@
   * Backspace deletes a character from the Linked List.
   * ctrl + c or ctrl + z saves the File and Exits the Editor.
 
-##To Do:
-  * Append a File.
-  * usage of navigation button to navigate through the Input Section.
+##Execution :
+```
+  #Posix Compliant
+  > cd Basic-Editor
+  > make
+  > cd dist/Debug/GNU-Linux-x86/
+  > ./basic-editor [filename]
+
+  #Windows
+  > Compile the Source Code main.c with conio.h in the same directory
+  > Use the Generated Executable file for execution.
+  > Basic-Editor.exe [filename]
+```
+##To Do :
+  * Append Functionality.
+  * Usage of navigation button to navigate through the Input Section.
   * Cut Copy functionality.
