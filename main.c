@@ -8,22 +8,46 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "conio.h"
-struct node																													//Double Linked List Implementation.
+
+struct node																													// Double Linked List Implementation.
 {
-	char info[11];
+	char info[10];
 	struct node *llink;
 	struct node *rlink;
 };
+
 typedef struct node *Node;
-Node root = NULL;																										//Root node creation
-char* FILENAME;																											//Filename given as cmd line arguments
+Node root = NULL;																										// Root node creation
+char* FILENAME;																											// Filename given as cmd line arguments
+
+Node createNode(Node);
+Node deleteNode(Node);
+void print();
+void save();
+void input();
+void lines(int);
+/*
+	Receive the command line argument for filename and call the input function
+*/
+int main(int argc,char* argv[])
+{
+	root=(Node) malloc(sizeof(struct node));
+	if(argc>1)
+	{
+		FILENAME=argv[1];																								// Filename stored for creating and storing data.
+		input();
+	}
+	else
+		printf("Error! please give filename as command line argument\nThe program will exit now");
+	return 0;
+}
 
 /*
 	Creates a Node, links it to the previous Nodes and returns the address of the new node.
 */
 Node createNode(Node parent)
 {
-	Node temp=(Node) malloc(sizeof(struct node));											//Node Creation and joining the Node with previous nodes.
+	Node temp=(Node) malloc(sizeof(struct node));											// Node Creation and joining the Node with previous nodes.
 	parent->rlink=temp;
 	temp->llink=parent;
 	return temp;
@@ -35,16 +59,17 @@ Node createNode(Node parent)
 Node deleteNode(Node current)
 {
 	Node temp=current->llink;
-	if(temp!=root)																										//Delete a Node if it is not the root node.
+	if(current!=root)																										// Delete a Node if it is not the root node.
 	{
 		free(current);
 		temp->rlink=NULL;
 		return temp;
 	}
-	else
+	else																																// Warning message if explicit Root node deletion.
 	{
-		printf("\nError! cannot delete root node \nPress Enter key to continue");
+		printf("\n\nError! cannot delete root node \nPress Enter key to continue");
 		getchar();
+		print();
 		return current;
 	}
 }
@@ -56,14 +81,13 @@ void save()
 {
 	FILE *fp=fopen(FILENAME,"w");
 	Node temp=root;
-	while(temp!=NULL)																									//Node traversal from the root node to all other nodes.
+	while(temp!=NULL)																									// Node traversal from the root node to all other nodes.
 	{
-		fprintf(fp,temp->info);																					//Store data of each node in the File.
+		fprintf(fp,temp->info);																					// Store data of each node in the File.
 		temp=temp->rlink;
 	}
 	fclose(fp);
-	printf("\nFile Saved Successfully\nPress Enter key to Exit\n");
-	getchar();
+	printf("\n\t\t\tFile Saved Successfully\n");
 }
 
 /*
@@ -71,12 +95,20 @@ void save()
 */
 void print()
 {
-	//system("cls"); for dos operating system
-	//system("clear"); for unix operating system
+	int i;
+	//system("cls"); 																									// For dos operating system.
+	system("clear");																									// For unix operating system.
+	lines(2);
+	printf("\n\t\t\tBasic Editor\n");
+	printf("\t\t\tSave Option : ctrl + c or ctrl + z\n");
+	lines(2);
+	lines(0);
+	printf("\t\t\tInput Field:\n\n");
 	Node temp=root;
-	while(temp!=NULL)																									//Node traversal from the root node to all other nodes.
+	while(temp!=NULL)																									// Node traversal from the root node to all other nodes.
 	{
-		printf("%s",temp->info);																				//Print the data of each node to the screen.
+		for(i=0;i<10;i++)
+			printf("%c",temp->info[i]);																		// Print the data of each node to the screen.
 		temp=temp->rlink;
 	}
 }
@@ -86,49 +118,79 @@ void print()
 */
 void input()
 {
+	print();
 	char ch;
-	int noOfChar=-1;
+	int noOfChar=0;																										// No of Characters in the current Node.
+	int totalNoOfLines=1;																							// Total no of NewLine Characters.
+	int totalNoOfChar=0;																							// Total no of Characters.
 	Node temp=root;
 	ch=getche();
-																																		//receive input and check if input is not ctrl + c and ctrl + z
-	while( ch != 3 && ch != 26 )
+	while( ch != 3 && ch != 26 )																			// Receive input and check if input is not ctrl + c and ctrl + z
 	{
 		noOfChar++;
-		if(ch == 8)																											//check Backspace character
+		//printf("\n%d->%c:%d\n",noOfChar,ch,ch);
+		if(( ch == 8 || ch == 127 ) && noOfChar > 1)										// Check Backspace character
 		{
-			if(noOfChar == 0)																							// if previous node character to be deleted then delete current node and delete previous node last character
+			noOfChar--;																										// Remove the count of Backspace as character.
+			(temp->info[noOfChar-1]=='\n')?(totalNoOfChar--,totalNoOfLines--):(totalNoOfChar--);
+																																		// Reduce count of characters deleted.
+			if(noOfChar == 1)																							// if previous node character to be deleted then delete current node and delete previous node last character
 			{
-				temp=deleteNode(temp);
-				noOfChar=9;
-				temp->info[noOfChar--]='\0';
+				if(temp!=root)																							//Normal Node Deletion.
+				{
+					temp=deleteNode(temp);
+					noOfChar=10;
+				}
+				else																												// Root node not deleted, only last character made null.
+				{
+							temp->info[0]='\0';
+							noOfChar=0;
+				}
 			}
-			else if( noOfChar < 10 )
-				temp->info[-- noOfChar ]='\0';															// last node traverses to previous node and delete last character
+			else if(noOfChar < 11)																				// Delete Last character and append null in that position.
+			{
+				temp->info[noOfChar - 1]='\0';
+				noOfChar--;
+			}
 			print();
 		}
-		else if(noOfChar>10)
+		else if(noOfChar > 10)																					// Node Creation for adding the Character.
 		{
+			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++);
+																																		// Add Count of Character and NewLine.
 			temp=createNode(temp);
-			noOfChar=0;
+			noOfChar=1;
+			temp->info[noOfChar-1]=ch;
 		}
-		temp->info[noOfChar]=ch;
-		ch=getche();
+		else if(noOfChar < 11)																					// Normal character addition in the same Node.
+		{
+			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++);
+																																		// Add Count of Character and NewLine.
+			temp->info[noOfChar - 1]=ch;
+		}
+		ch=getche();																										// Character Input from conio.h.
 	}
+	print();
+	lines(0);
+	lines(1);
 	save();
+	printf("\n\t\t\tNo Of Characters:%d\n\t\t\tNo of Lines:%d\n",totalNoOfChar,totalNoOfLines);
+	lines(1);
 }
-
 /*
-	Receive the command line argument for filename and call the input function
+	Printing the required type of Lines.
 */
-int main(int argc,char* argv[])
+void lines(int option)
 {
-	root=(Node) malloc(sizeof(struct node));
-	if(argc>1)
+	switch(option)
 	{
-		FILENAME=argv[1];																								//Filename stored for creating and storing data.
-		input();
+		case 1:
+			printf("\n************************************************************************\n");
+			break;
+		case 2:
+			printf("\n+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+\n");
+			break;
+		default:
+			printf("\n------------------------------------------------------------------------\n");
 	}
-	else
-		printf("Error! please give filename as command line argument\nThe program will exit now");
-	return 0;
 }
