@@ -10,3 +10,8 @@
   * The Program receives character by character input and stores it in the Linked List
   * Backspace deletes a character from the Linked List.
   * ctrl + c or ctrl + z saves the File and Exits the Editor.
+
+##To Do:
+  * Append a File.
+  * usage of navigation button to navigate through the Input Section.
+  * Cut Copy functionality.
