@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Editor
+PROJECTNAME=Basic-Editor
 
 # Active Configuration
 DEFAULTCONF=Debug

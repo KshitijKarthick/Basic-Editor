@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=editor
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/editor
+CND_ARTIFACT_NAME_Debug=basic-editor
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/basic-editor
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=editor.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/editor.tar
+CND_PACKAGE_NAME_Debug=basic-editor.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/basic-editor.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=editor
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/editor
+CND_ARTIFACT_NAME_Release=basic-editor
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/basic-editor
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=editor.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/editor.tar
+CND_PACKAGE_NAME_Release=basic-editor.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/basic-editor.tar
 #
 # include compiler specific variables
 #
