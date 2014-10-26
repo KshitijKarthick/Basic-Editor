@@ -39,6 +39,7 @@ int main(int argc,char* argv[])
 	{
 		FILENAME=argv[1]; // Filename stored for creating and storing data.
 		input();
+		//input();
 	}
 	else
 		printf("Error! please give filename as command line argument\nThe program will exit now");
@@ -128,22 +129,25 @@ void print()
 */
 void input()
 {
-	print();
+	static int noOfChar=0;       // No of Characters in the current Node.
+	static int totalNoOfLines=1;	// Total no of NewLine Characters.
+	static int totalNoOfChar=0;	// Total no of Characters.
 	char ch;
-	int noOfChar=0;       // No of Characters in the current Node.
-	int totalNoOfLines=1;	// Total no of NewLine Characters.
-	int totalNoOfChar=0;	// Total no of Characters.
+	print();
 	Node temp=root;
+	while(temp->rlink!=NULL)
+		temp=temp->rlink;
 	ch=getche();
 
 	// Receive input and check if input is not ctrl + c and ctrl + z
 	while( ch != 3 && ch != 26 )
 	{
 		noOfChar++;
-		//printf("\n%d->%c:%d\n",noOfChar,ch,ch);
-		if(( ch == 8 || ch == 127 ) && noOfChar > 1) // Check Backspace character
+		//printf("\n%d->%c:%d\n",noOfChar,ch,(int)ch);
+		if(( ch == 8 || ch == 127 )) // Check Backspace character
 		{
-			noOfChar--;	// Remove the count of Backspace as character.
+			if(noOfChar>1)
+				noOfChar--;	// Remove the count of Backspace as character.
 			(temp->info[noOfChar-1]=='\n')?(totalNoOfChar--,totalNoOfLines--):(totalNoOfChar--); // Reduce count of characters deleted.
 
 			// if previous node character to be deleted then delete current node and delete previous node last character
@@ -225,7 +229,7 @@ void clearscr()
 {
 	#if defined(__CYGWIN__) && !defined(_WIN32)
 	/* Cygwin POSIX under Microsoft Windows. -------------------- */
-  	system("cls");
+  		system("cls");
 	#elif !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
 	/* UNIX-style OS. ------------------------------------------- */
 		system("clear");
