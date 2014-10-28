@@ -9,10 +9,11 @@
 #include<stdlib.h>
 #include "conio.h"
 
+#define WORD_SIZE 10
 // Double Linked List Implementation.
 struct node
 {
-	char info[10];
+	char info[WORD_SIZE];
 	struct node *llink;
 	struct node *rlink;
 };
@@ -29,6 +30,10 @@ void input();
 void lines(int);
 void clearscr();
 
+int noOfChar=0;       // No of Characters in the current Node.
+int totalNoOfLines=1;	// Total no of NewLine Characters.
+int totalNoOfChar=0;	// Total no of Characters.
+
 /*
 	Receive the command line argument for filename and call the input function
 */
@@ -37,7 +42,33 @@ int main(int argc,char* argv[])
 	root=(Node) malloc(sizeof(struct node));
 	if(argc>1)
 	{
+		FILE *fp;
 		FILENAME=argv[1]; // Filename stored for creating and storing data.
+		if(fp=fopen(FILENAME,"r"))
+		{
+			char ch;
+			Node temp=root;
+			while( ( ch = fgetc(fp) ) != EOF )
+      		{
+      			//printf("°",ch);
+      			noOfChar++;
+      			// Normal character storage in the Node.
+      			if(noOfChar<11)
+      			{
+      				(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
+					temp->info[noOfChar - 1]=ch;
+      			}
+      			// Node Creation for adding the Character.
+				else if(noOfChar > 10)
+				{
+					(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
+					temp=createNode(temp);
+					noOfChar=1;
+					temp->info[noOfChar-1]=ch;
+				}
+      		}
+      		fclose(fp);
+		}
 		input();
 		//input();
 	}
@@ -51,9 +82,12 @@ int main(int argc,char* argv[])
 */
 Node createNode(Node parent)
 {
+	int i;
 	Node temp=(Node) malloc(sizeof(struct node)); // Node Creation and joining the Node with previous nodes.
 	parent->rlink=temp;
 	temp->llink=parent;
+	for(i=0;i<WORD_SIZE;i++)
+		temp->info[i]='\0';
 	return temp;
 }
 
@@ -89,11 +123,16 @@ void save()
 {
 	FILE *fp=fopen(FILENAME,"w");
 	Node temp=root;
-
+	int i;
 	// Node traversal from the root node to all other nodes.
 	while(temp!=NULL)
 	{
-		fprintf(fp,temp->info); // Store data of each node in the File.
+		i=0;
+		while(i<WORD_SIZE && temp->info[i]!='\0')
+		{
+			fputc(temp->info[i],fp); // Store data of each node in the File.
+			i++;
+		}
 		temp=temp->rlink;
 	}
 	fclose(fp); // Close File Stream.
@@ -118,7 +157,7 @@ void print()
 	// Node traversal from the root node to all other nodes.
 	while(temp!=NULL)
 	{
-		for(i=0;i<10;i++)
+		for(i=0;i<10 && temp->info[i] != '\0';i++)
 			printf("%c",temp->info[i]); // Print the data of each node to the screen.
 		temp=temp->rlink;
 	}
@@ -129,9 +168,7 @@ void print()
 */
 void input()
 {
-	static int noOfChar=0;       // No of Characters in the current Node.
-	static int totalNoOfLines=1;	// Total no of NewLine Characters.
-	static int totalNoOfChar=0;	// Total no of Characters.
+	
 	char ch;
 	print();
 	Node temp=root;
@@ -143,7 +180,7 @@ void input()
 	while( ch != 3 && ch != 26 )
 	{
 		noOfChar++;
-		//printf("\n%d->%c:%d\n",noOfChar,ch,(int)ch);
+		//printf("\n11746784\t->\t:\t11746880\n",noOfChar,ch,(int)ch);
 		if(( ch == 8 || ch == 127 )) // Check Backspace character
 		{
 			if(noOfChar>1)
@@ -158,7 +195,7 @@ void input()
 				if(temp!=root)
 				{
 					temp=deleteNode(temp);
-					noOfChar=10;
+					noOfChar=WORD_SIZE;
 				}
 
 				// Root node not deleted, only last character made null.
@@ -170,7 +207,7 @@ void input()
 			}
 
 			// Delete Last character and append null in that position.
-			else if(noOfChar < 11)
+			else if(noOfChar < WORD_SIZE+1)
 			{
 				temp->info[noOfChar - 1]='\0';
 				noOfChar--;
@@ -188,7 +225,7 @@ void input()
 		}
 
 		// Normal character addition in the same Node.
-		else if(noOfChar < 11)
+		else
 		{
 			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
 
