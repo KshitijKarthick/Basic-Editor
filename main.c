@@ -26,9 +26,10 @@ Node createNode(Node);
 Node deleteNode(Node);
 void print();
 void save();
-void input();
+void keyboardInput();
 void lines(int);
 void clearscr();
+void fileInput(char*);
 
 int noOfChar=0;       // No of Characters in the current Node.
 int totalNoOfLines=1;	// Total no of NewLine Characters.
@@ -42,9 +43,22 @@ int main(int argc,char* argv[])
 	root=(Node) malloc(sizeof(struct node));
 	if(argc>1)
 	{
-		FILE *fp;
 		FILENAME=argv[1]; // Filename stored for creating and storing data.
-		if(fp=fopen(FILENAME,"r"))
+		fileInput(FILENAME);
+		keyboardInput();
+	}
+	else
+		printf("Error! please give filename as command line argument\nThe program will exit now");
+	return 0;
+}
+
+/*
+	Reads a file and loads it into all Nodes.
+ */
+void fileInput(char *FILENAME)
+{
+	FILE *fp;
+	if(fp=fopen(FILENAME,"r"))
 		{
 			char ch;
 			Node temp=root;
@@ -53,28 +67,22 @@ int main(int argc,char* argv[])
       			//printf("°",ch);
       			noOfChar++;
       			// Normal character storage in the Node.
-      			if(noOfChar<11)
+      			if(noOfChar< WORD_SIZE+1)
       			{
       				(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
 					temp->info[noOfChar - 1]=ch;
       			}
       			// Node Creation for adding the Character.
-				else if(noOfChar > 10)
+				else if(noOfChar > WORD_SIZE)
 				{
 					(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
-					temp=createNode(temp);
+					 	temp=createNode(temp);
 					noOfChar=1;
 					temp->info[noOfChar-1]=ch;
 				}
       		}
       		fclose(fp);
 		}
-		input();
-		//input();
-	}
-	else
-		printf("Error! please give filename as command line argument\nThe program will exit now");
-	return 0;
 }
 
 /*
@@ -133,6 +141,8 @@ void save()
 			fputc(temp->info[i],fp); // Store data of each node in the File.
 			i++;
 		}
+		if(!temp->rlink)
+			break;
 		temp=temp->rlink;
 	}
 	fclose(fp); // Close File Stream.
@@ -157,8 +167,10 @@ void print()
 	// Node traversal from the root node to all other nodes.
 	while(temp!=NULL)
 	{
-		for(i=0;i<10 && temp->info[i] != '\0';i++)
+		for(i=0;i<WORD_SIZE && temp->info[i] != '\0';i++)
 			printf("%c",temp->info[i]); // Print the data of each node to the screen.
+		if(!temp->rlink)
+			break;
 		temp=temp->rlink;
 	}
 }
@@ -166,7 +178,7 @@ void print()
 /*
 	Receives character by character input from the console , and exits the input mode on entry of ctr + c or ctrl + z
 */
-void input()
+void keyboardInput()
 {
 	
 	char ch;
@@ -216,7 +228,7 @@ void input()
 		}
 
 		// Node Creation for adding the Character.
-		else if(noOfChar > 10)
+		else if(noOfChar > WORD_SIZE)
 		{
 			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
 			temp=createNode(temp);
