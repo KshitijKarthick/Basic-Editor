@@ -4,6 +4,8 @@
   * Create Files.
   * Stores Data based on user input.
   * Compliant with Posix Environment and Windows.
+  * Append Functionality Present.
+  * Navigation through the Input Section.
 
 ## Program Details :
   * Written in C.
@@ -12,7 +14,7 @@
   * Each node is used to store 10 characters.
   * The Program receives character by character input and stores it in the Linked List
   * Backspace deletes a character from the Linked List.
-  * ctrl + c or ctrl + z saves the File and Exits the Editor.
+  * Keys ctrl + c or ctrl + z saves the File and Exits the Editor.
 
 ## Execution :
 ```
@@ -28,6 +30,5 @@
   > Basic-Editor.exe [filename]
 ```
 ## To Do :
-  * Append Functionality.
-  * Usage of navigation button to navigate through the Input Section.
+  * Usage of navigation button to edit through the Input Section.
   * Cut Copy functionality.
