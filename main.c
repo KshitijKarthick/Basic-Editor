@@ -20,8 +20,8 @@ struct node
 
 typedef struct node *Node;
 Node root = NULL;  // Root node creation.
-char* FILENAME;    // Filename given as cmd line arguments.
 
+// Function Declarations.
 Node createNode(Node);
 Node deleteNode(Node);
 void print();
@@ -34,6 +34,7 @@ void fileInput(char*);
 int noOfChar=0;       // No of Characters in the current Node.
 int totalNoOfLines=1;	// Total no of NewLine Characters.
 int totalNoOfChar=0;	// Total no of Characters.
+char* FILENAME;    // Filename given as cmd line arguments.
 
 /*
 	Receive the command line argument for filename and call the input function
@@ -64,19 +65,16 @@ void fileInput(char *FILENAME)
 			Node temp=root;
 			while( ( ch = fgetc(fp) ) != EOF )
       		{
-      			//printf("°",ch);
+      			//printf("\n%c->",ch);
       			noOfChar++;
+      			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
       			// Normal character storage in the Node.
-      			if(noOfChar< WORD_SIZE+1)
-      			{
-      				(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
+      			if(noOfChar <= WORD_SIZE)
 					temp->info[noOfChar - 1]=ch;
-      			}
       			// Node Creation for adding the Character.
-				else if(noOfChar > WORD_SIZE)
+				else
 				{
-					(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
-					 	temp=createNode(temp);
+					temp=createNode(temp);
 					noOfChar=1;
 					temp->info[noOfChar-1]=ch;
 				}
@@ -130,20 +128,14 @@ Node deleteNode(Node current)
 void save()
 {
 	FILE *fp=fopen(FILENAME,"w");
-	Node temp=root;
+	Node temp;
 	int i;
 	// Node traversal from the root node to all other nodes.
-	while(temp!=NULL)
+	for(temp=root;temp!=NULL;temp=temp->rlink)
 	{
-		i=0;
-		while(i<WORD_SIZE && temp->info[i]!='\0')
-		{
+		for(i=0;i<WORD_SIZE && temp->info[i]!='\0';i++)
 			fputc(temp->info[i],fp); // Store data of each node in the File.
-			i++;
-		}
-		if(!temp->rlink)
-			break;
-		temp=temp->rlink;
+		
 	}
 	fclose(fp); // Close File Stream.
 	printf("\n\t\t\tFile Saved Successfully\n");
@@ -162,16 +154,12 @@ void print()
 	lines(2);
 	lines(0);
 	printf("\t\t\tInput Field:\n\n");
-	Node temp=root;
-
+	Node temp;
 	// Node traversal from the root node to all other nodes.
-	while(temp!=NULL)
+	for(temp=root;temp!=NULL;temp=temp->rlink)
 	{
 		for(i=0;i<WORD_SIZE && temp->info[i] != '\0';i++)
 			printf("%c",temp->info[i]); // Print the data of each node to the screen.
-		if(!temp->rlink)
-			break;
-		temp=temp->rlink;
 	}
 }
 
@@ -192,11 +180,11 @@ void keyboardInput()
 	while( ch != 3 && ch != 26 )
 	{
 		noOfChar++;
-		//printf("\n11746784\t->\t:\t11746880\n",noOfChar,ch,(int)ch);
+		//printf("\n%d\t->\t%c:\t%d\n",noOfChar,ch,(int)ch);
 		if(( ch == 8 || ch == 127 )) // Check Backspace character
 		{
 			if(noOfChar>1)
-				noOfChar--;	// Remove the count of Backspace as character.
+				noOfChar--;	// Remove the count of Backspace as character.				
 			(temp->info[noOfChar-1]=='\n')?(totalNoOfChar--,totalNoOfLines--):(totalNoOfChar--); // Reduce count of characters deleted.
 
 			// if previous node character to be deleted then delete current node and delete previous node last character
@@ -213,35 +201,35 @@ void keyboardInput()
 				// Root node not deleted, only last character made null.
 				else
 				{
-							temp->info[0]='\0';
-							noOfChar=0;
+					temp->info[noOfChar-1]='\0';
+					noOfChar=0;
 				}
 			}
 
 			// Delete Last character and append null in that position.
-			else if(noOfChar < WORD_SIZE+1)
+			if(noOfChar <= WORD_SIZE && noOfChar > 0)
 			{
 				temp->info[noOfChar - 1]='\0';
 				noOfChar--;
 			}
 			print();
 		}
-
-		// Node Creation for adding the Character.
-		else if(noOfChar > WORD_SIZE)
-		{
-			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
-			temp=createNode(temp);
-			noOfChar=1;
-			temp->info[noOfChar-1]=ch;
-		}
-
-		// Normal character addition in the same Node.
 		else
 		{
 			(ch=='\n')?(totalNoOfChar++,totalNoOfLines++):(totalNoOfChar++); // Add Count of Character and NewLine.
-
-			temp->info[noOfChar - 1]=ch;
+			
+			// Normal character addition in the same Node.
+			if(noOfChar <= WORD_SIZE)
+				temp->info[noOfChar - 1]=ch;
+		
+			// Node Creation for adding the Character.
+			else
+			{
+				temp=createNode(temp);
+				noOfChar=1;
+				temp->info[noOfChar-1]=ch;
+				fflush(stdin);
+			}
 		}
 		ch=getche(); // Character input from conio.h.
 	}
