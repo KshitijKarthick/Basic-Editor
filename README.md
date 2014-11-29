@@ -7,6 +7,8 @@
   * Append Functionality Present.
   * Navigation through the Input Section.
 
+![Image](/img/mainWindow.png "GUI Interface")
+
 ## Program Details :
   * Written in C.
   * Implements Double Linked Lists to store data entered by the User.
@@ -29,6 +31,15 @@
   > Use the Generated Executable file for execution.
   > Basic-Editor.exe [filename]
 ```
+
+## Working :
+  * Create Functionality 
+
+![Image](/img/working.png "Create Functionality")
+  * Append Functionality
+
+![Image](/img/working2.png "Append Import")
+
 ## To Do :
   * Usage of navigation button to edit through the Input Section.
   * Cut Copy functionality.
